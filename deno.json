@@ -1,9 +1,9 @@
 {
   "tasks": {
-    "dev": "deno run --watch 2016/01/main.ts",
-    "check": "deno run --inspect 2016/01/main.ts"
+    "test": "deno test --watch --fail-fast",
+    "resolve": "deno run -A ./lib/resolve.ts"
   },
   "imports": {
-    "@std/assert": "jsr:@std/assert@1"
+    "@std/expect": "jsr:@std/expect"
   }
 }
