@@ -1,7 +1,4 @@
-type Sample = {
-  input: string;
-  expected: number;
-};
+import { Sample } from "lib/types.ts";
 
 export const samples01: Array<Sample> = [
   { input: "(())", expected: 0 },

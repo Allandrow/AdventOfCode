@@ -1,9 +1,11 @@
 {
   "tasks": {
     "test": "deno test --watch --fail-fast",
-    "resolve": "deno run -A ./lib/resolve.ts"
+    "resolve": "deno run -A ./lib/resolve.ts",
+    "create": "./lib/create.sh"
   },
   "imports": {
-    "@std/expect": "jsr:@std/expect"
+    "@std/expect": "jsr:@std/expect",
+    "lib/": "./lib/"
   }
 }
