@@ -8,8 +8,8 @@ samples01.forEach(({ input, expected }) => {
   });
 });
 
-// samples02.forEach(({ input, expected }) => {
-//   Deno.test(`part 2: ${input} gives ${expected}`, () => {
-//     expect(part02(input)).toBe(expected);
-//   });
-// });
+samples02.forEach(({ input, expected }) => {
+  Deno.test(`part 2: ${input} gives ${expected}`, () => {
+    expect(part02(input)).toBe(expected);
+  });
+});
