@@ -21,19 +21,15 @@ export function part02(input: string): number {
   // set a Map that will store each occurence count and serve as cache to avoid recounting already known numbers
   const occCount = new Map();
 
-  for (const num of left) {
-    // skip this iteration if num has already been counted
-    if (occCount.has(num)) {
-      continue;
-    }
-
-    const count = right.filter((value) => value === num).length;
-    occCount.set(num, count);
-  }
+  right.forEach((num) => {
+    const nextVal = occCount.get(num) ?? 0;
+    occCount.set(num, nextVal + 1);
+  });
 
   // reduce the first list to multiply each number by his occurence count and add to sum
   return left.reduce((total, num) => {
-    return total + num * occCount.get(num);
+    const multiplier = occCount.get(num) ?? 0;
+    return total + num * multiplier;
   }, 0);
 }
 
