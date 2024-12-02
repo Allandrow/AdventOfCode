@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "test": "deno test --watch --fail-fast",
+    "test": "deno test --watch",
     "resolve": "deno run -A ./lib/resolve.ts",
     "create": "./lib/create.sh"
   },
