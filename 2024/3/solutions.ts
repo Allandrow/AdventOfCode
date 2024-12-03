@@ -8,22 +8,16 @@ export function part01(input: string): number {
 export function part02(input: string): number {
   const regex = /don't\(\)|do\(\)|mul\((\d{1,3}),(\d{1,3})\)/g;
   let doOp = true;
+
   return input.matchAll(regex).reduce((sum, command) => {
     const [op, first, second] = command;
-    if (op === "don't()") {
-      doOp = false;
-      return sum;
+
+    if (op.startsWith("mul") && doOp) {
+      return sum + Number(first) * Number(second);
     }
 
-    if (op === "do()") {
-      doOp = true;
-      return sum;
-    }
+    doOp = op === "do()";
 
-    if (!doOp) {
-      return sum;
-    }
-
-    return sum + Number(first) * Number(second);
+    return sum;
   }, 0);
 }
