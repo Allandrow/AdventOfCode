@@ -1,4 +1,5 @@
 import { Pos } from "lib/types.ts";
+import { onlyOddIndices } from "lib/filters.ts";
 
 const directions: Array<Pos> = [
   { x: 0, y: 1 },
@@ -12,6 +13,7 @@ const directions: Array<Pos> = [
 ];
 
 const word = "XMAS";
+const validStrings = ["MMSS", "SSMM", "MSSM", "SMMS"];
 
 export function part01(input: string): number {
   const lines = formatInput(input);
@@ -49,10 +51,8 @@ export function part02(input: string): number {
 
   for (let y = 0; y <= limit.y; y++) {
     for (let x = 0; x <= limit.x; x++) {
-      const char = lines[y][x];
-
-      if (char === "A") {
-        sum += validX({ x, y }, limit, lines);
+      if (lines[y][x] === "A" && validX({ x, y }, limit, lines)) {
+        sum++;
       }
     }
   }
@@ -98,40 +98,18 @@ function getLimit(lines: string[]): Pos {
   return { x: lines[0].length - 1, y: lines.length - 1 };
 }
 
-function validX(pos: Pos, limit: Pos, lines: string[]): number {
-  const nw = { x: -1, y: 1 };
-  const ne = { x: 1, y: 1 };
-  const se = { x: 1, y: -1 };
-  const sw = { x: -1, y: -1 };
+function validX(pos: Pos, limit: Pos, lines: string[]): boolean {
+  const string = directions
+    .filter(onlyOddIndices)
+    .map(({ x, y }) => {
+      const nextPos = { x: x + pos.x, y: y + pos.y };
 
-  const nextPositions = [nw, ne, se, sw].map(({ x, y }) => {
-    return { x: x + pos.x, y: y + pos.y };
-  });
+      if (!isValidNextPos(nextPos, limit)) {
+        return "";
+      }
 
-  if (!nextPositions.every((d) => isValidNextPos(d, limit))) {
-    return 0;
-  }
+      return getChar(nextPos, lines);
+    }).join("");
 
-  const nwChar = getChar(nextPositions[0], lines);
-  const neChar = getChar(nextPositions[1], lines);
-  const seChar = getChar(nextPositions[2], lines);
-  const swChar = getChar(nextPositions[3], lines);
-
-  if (nwChar === "M" && seChar === "S" && neChar === "M" && swChar === "S") {
-    return 1;
-  }
-
-  if (nwChar === "S" && seChar === "M" && neChar === "M" && swChar === "S") {
-    return 1;
-  }
-
-  if (nwChar === "M" && seChar === "S" && neChar === "S" && swChar === "M") {
-    return 1;
-  }
-
-  if (nwChar === "S" && seChar === "M" && neChar === "S" && swChar === "M") {
-    return 1;
-  }
-
-  return 0;
+  return validStrings.some((str) => str === string);
 }
