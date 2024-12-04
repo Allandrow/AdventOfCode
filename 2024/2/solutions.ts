@@ -8,7 +8,7 @@ export function part01(input: string): number {
 
 export function part02(input: string): number {
   return formatInput(input).reduce((sum, line) => {
-    return hasOneSafeLine(line) ? sum + 1 : sum;
+    return hasOneSafeLine(line) ? ++sum : sum;
   }, 0);
 }
 
