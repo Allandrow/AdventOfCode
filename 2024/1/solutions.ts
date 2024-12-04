@@ -1,4 +1,5 @@
 import { sortNumbersAsc } from "lib/sorters.ts";
+import { toNumbers } from "lib/formatters.ts";
 
 type Lists = [number[], number[]];
 
@@ -36,10 +37,10 @@ export function part02(input: string): number {
 // Set a tuple of 2 lists, one for each column with inputs converted to numbers
 function setLists(input: string): Lists {
   return input.split("\n").reduce((lists: Lists, line) => {
-    const [a, b] = line.split(/\s+/);
+    const [a, b] = toNumbers(line);
 
-    lists[0].push(Number(a));
-    lists[1].push(Number(b));
+    lists[0].push(a);
+    lists[1].push(b);
 
     return lists;
   }, [[], []]);

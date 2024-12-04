@@ -1,3 +1,5 @@
+import { toNumbers } from "lib/formatters.ts";
+
 export function part01(input: string): number {
   return formatInput(input).reduce((sum, line) => {
     return isSafe(line) ? ++sum : sum;
@@ -11,7 +13,7 @@ export function part02(input: string): number {
 }
 
 function formatInput(input: string): number[][] {
-  return input.split("\n").map((line) => line.split(" ").map(Number));
+  return input.split("\n").map(toNumbers);
 }
 
 function hasOneSafeLine(line: number[]): boolean {
