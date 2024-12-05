@@ -1,103 +1,73 @@
+import { bubbleSort } from "lib/sorters.ts";
+import { SortPredicate } from "lib/types.ts";
+import { toNumbersBySep } from "lib/formatters.ts";
+
 type ExclusionMap = Map<number, Set<number>>;
 
 export function part01(input: string): number {
-  const [rules, lines] = formatInput(input);
-  const list = setExclusionMap(rules);
+  const [map, lines] = formatInput(input);
 
-  let sum = 0;
-
-  Lines: for (const line of lines) {
-    const visited = new Set();
-
-    for (const num of line) {
-      const numberExclusionList = list.get(num) ?? new Set();
-      const intersect = visited.intersection(numberExclusionList);
-      visited.add(num);
-
-      if (intersect.size > 0) {
-        continue Lines;
-      }
+  return lines.reduce((sum, line) => {
+    if (!isValidLine(line, map)) {
+      return sum;
     }
 
-    sum += line[Math.floor(line.length / 2)];
-  }
-
-  return sum;
+    return sum + line[Math.floor(line.length / 2)];
+  }, 0);
 }
 
 export function part02(input: string): number {
-  const [rules, lines] = formatInput(input);
-  const list = setExclusionMap(rules);
+  const [map, lines] = formatInput(input);
 
-  let sum = 0;
-
-  for (const line of lines) {
-    const visited = new Set();
-    let intersect: Set<number> = new Set();
-
-    for (const num of line) {
-      const numberExclusionList = list.get(num) ?? new Set();
-      intersect = visited.intersection(numberExclusionList);
-
-      if (intersect.size > 0) {
-        break;
-      }
-
-      visited.add(num);
+  return lines.reduce((sum, line) => {
+    if (isValidLine(line, map)) {
+      return sum;
     }
 
-    if (intersect.size === 0) {
-      continue;
-    }
-    const newLine = sortLine(line, list);
-    sum += newLine[Math.floor(line.length / 2)];
-  }
+    const predicate = buildPredicateFn(map);
+    const sortedLine = bubbleSort(predicate, line);
 
-  return sum;
+    return sum + sortedLine[Math.floor(line.length / 2)];
+  }, 0);
 }
 
-function formatInput(input: string): [number[][], number[][]] {
+function formatInput(input: string): [ExclusionMap, number[][]] {
   const inputs = input.split("\n\n");
-
-  const rules = inputs[0].split("\n").map((rule) => {
-    return rule.split("|").map(Number);
-  });
-
-  const lines = inputs[1].split("\n").map((line) =>
-    line.split(",").map(Number)
-  );
+  const rules = inputs[0].split("\n").reduce(mapReducer, new Map());
+  const lines = inputs[1].split("\n").map(toNumbersBySep(","));
 
   return [rules, lines];
 }
 
-function setExclusionMap(rules: number[][]): ExclusionMap {
-  return rules.reduce((map, rule) => {
-    const set = map.get(rule[0]) ?? new Set();
-    set.add(rule[1]);
-    map.set(rule[0], set);
-    return map;
-  }, new Map());
+function mapReducer(map: ExclusionMap, line: string): ExclusionMap {
+  const numbers = toNumbersBySep("|")(line);
+
+  const set = map.get(numbers[0]) ?? new Set();
+  set.add(numbers[1]);
+  map.set(numbers[0], set);
+
+  return map;
 }
 
-function sortLine(line: number[], list: ExclusionMap): number[] {
-  const numbers = [...line];
-  let changed = true;
+function isValidLine(line: number[], map: ExclusionMap): boolean {
+  const visited = new Set();
 
-  while (changed) {
-    changed = false;
-    for (let i = 0; i < numbers.length - 1; i++) {
-      const num = numbers[i];
-      const next = numbers[i + 1];
+  return line.every((num) => {
+    const list = map.get(num) ?? new Set();
+    const intersect = visited.intersection(list);
+    visited.add(num);
 
-      const exclusions = list.get(next) ?? new Set();
+    return intersect.size === 0;
+  });
+}
 
-      if (exclusions.has(num)) {
-        numbers[i + 1] = num;
-        numbers[i] = next;
-        changed = true;
-      }
-    }
-  }
+// Curry a predicate function that has a map first then gets numbers while used in the sorting algorithm
+function buildPredicateFn(
+  map: ExclusionMap,
+): SortPredicate {
+  return function (a, b) {
+    const exclusions = map.get(b) ?? new Set();
 
-  return numbers;
+    return exclusions.has(a);
+  };
 }
