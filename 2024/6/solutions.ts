@@ -1,6 +1,6 @@
-import { Pos } from "lib/types.ts";
+import { Grid, Pos } from "lib/types.ts";
+import { isInBounds } from "lib/comparators.ts";
 
-type Grid = string[][];
 type Obs = Set<string>;
 
 // North - East - South - West
@@ -134,11 +134,6 @@ function registerPositions(grid: Grid): { start: Pos; obstacles: Obs } {
     start,
     obstacles: set,
   };
-}
-
-function isInBounds(pos: Pos, grid: Grid): boolean {
-  return pos.x >= 0 && pos.y >= 0 && pos.x < grid[0].length &&
-    pos.y < grid.length;
 }
 
 function isAnObstacle(pos: Pos, set: Obs): boolean {
