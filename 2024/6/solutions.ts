@@ -106,11 +106,11 @@ export function part02(input: string): number {
   return solutions.size;
 }
 
-function formatInput(input: string): Grid {
+function formatInput(input: string): Grid<string> {
   return input.split("\n").map((line) => line.split(""));
 }
 
-function registerPositions(grid: Grid): { start: Pos; obstacles: Obs } {
+function registerPositions(grid: Grid<string>): { start: Pos; obstacles: Obs } {
   const set: Set<string> = new Set();
   const start: Pos = { x: 0, y: 0 };
 

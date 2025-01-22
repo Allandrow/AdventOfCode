@@ -80,7 +80,7 @@ function addPos(pos: Pos, set: Set<string>) {
   set.add(`${pos.x}|${pos.y}`);
 }
 
-function getAntennas(grid: Grid): Antennas {
+function getAntennas(grid: Grid<string>): Antennas {
   const map = new Map();
 
   grid.forEach((line, y) => {
@@ -96,7 +96,7 @@ function getAntennas(grid: Grid): Antennas {
   return map;
 }
 
-function formatInput(input: string): Grid {
+function formatInput(input: string): Grid<string> {
   return input.split("\n").map((line) => line.split(""));
 }
 

@@ -5,4 +5,4 @@ export type Sample = {
 
 export type Pos = { x: number; y: number };
 export type SortPredicate = (a: number, b: number) => boolean;
-export type Grid = string[][];
+export type Grid<T> = T[][];
