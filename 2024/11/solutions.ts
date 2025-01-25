@@ -12,18 +12,10 @@ export function part01(input: string): number {
 
 export function part02(input: string): number {
   const graph = formatInput2(input);
-  const currentNums: Set<number> = new Set();
-  const incomingNums: Set<number> = new Set();
 
   for (let i = 0; i < 75; i++) {
-    Object.entries(graph).forEach(([num, { count }]) => {
-      if (count > 0) {
-        currentNums.add(Number(num));
-      }
-    });
-
-    currentNums.forEach((num) => {
-      const node = graph[num];
+    Object.entries(graph).forEach(([key, node]) => {
+      const num = Number(key);
 
       if (node.next.length === 0) {
         node.next = setNextNums(num);
@@ -39,18 +31,15 @@ export function part02(input: string): number {
         } else {
           graph[nextNum].incoming += node.count;
         }
-        incomingNums.add(nextNum);
       });
+
       node.count = 0;
     });
 
-    incomingNums.forEach((inc) => {
-      graph[inc].count = graph[inc].incoming;
-      graph[inc].incoming = 0;
+    Object.values(graph).forEach((node) => {
+      node.count = node.incoming;
+      node.incoming = 0;
     });
-
-    currentNums.clear();
-    incomingNums.clear();
   }
 
   return Object.values(graph).reduce((sum, { count }) => sum + count, 0);
