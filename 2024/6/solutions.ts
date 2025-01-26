@@ -1,15 +1,8 @@
 import { Grid, Pos } from "lib/types.ts";
 import { isInBounds } from "lib/comparators.ts";
+import { directions } from "lib/constants.ts";
 
 type Obs = Set<string>;
-
-// North - East - South - West
-const directions: Array<Pos> = [
-  { x: 0, y: -1 },
-  { x: 1, y: 0 },
-  { x: 0, y: 1 },
-  { x: -1, y: 0 },
-];
 
 export function part01(input: string): number {
   const grid = formatInput(input);

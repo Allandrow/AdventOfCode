@@ -1,13 +1,7 @@
 import { toNumbersBySep } from "lib/formatters.ts";
 import { Grid, Pos } from "lib/types.ts";
 import { isInBounds } from "lib/comparators.ts";
-
-const directions: Array<Pos> = [
-  { x: 0, y: -1 },
-  { x: 1, y: 0 },
-  { x: 0, y: 1 },
-  { x: -1, y: 0 },
-];
+import { directions } from "lib/constants.ts";
 
 export function part01(input: string): number {
   const grid = formatInput(input);
